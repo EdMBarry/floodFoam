@@ -45,7 +45,7 @@ criticalFlowDepthInletFvPatchScalarField::criticalFlowDepthInletFvPatchScalarFie
 )
 :
     fixedValueFvPatchField<scalar>(p, iF),
-    criticalH_(0)
+    criticalH_(Zero)
 {}
 
 
@@ -57,7 +57,7 @@ criticalFlowDepthInletFvPatchScalarField::criticalFlowDepthInletFvPatchScalarFie
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchField<scalar>(ptf, p, iF, mapper),
+    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
     criticalH_(ptf.criticalH_)    
 {}
 
@@ -69,18 +69,8 @@ criticalFlowDepthInletFvPatchScalarField::criticalFlowDepthInletFvPatchScalarFie
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<scalar>(p, iF, dict),
+    fixedValueFvPatchScalarField(p, iF, dict),
     criticalH_(readScalar(dict.lookup("criticalH")))
-{}
-
-
-criticalFlowDepthInletFvPatchScalarField::criticalFlowDepthInletFvPatchScalarField
-(
-    const criticalFlowDepthInletFvPatchScalarField& wbppsf
-)
-:
-    fixedValueFvPatchField<scalar>(wbppsf),
-    criticalH_(wbppsf.criticalH_)
 {}
 
 
@@ -90,7 +80,7 @@ criticalFlowDepthInletFvPatchScalarField::criticalFlowDepthInletFvPatchScalarFie
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchField<scalar>(wbppsf, iF),
+    fixedValueFvPatchScalarField(wbppsf, iF),
     criticalH_(wbppsf.criticalH_)
 {}
 
@@ -105,11 +95,11 @@ void criticalFlowDepthInletFvPatchScalarField::updateCoeffs()
     }
  
 //  give internal values of H next to boundary patch
-    scalarField Hint = patch().lookupPatchField<volScalarField, scalar>("H").patchInternalField();
+    scalarField HInt = patch().lookupPatchField<volScalarField, scalar>("H").patchInternalField();
     scalarField Sp = patch().lookupPatchField<volScalarField, scalar>("S");
     
 //    operator==((Hint-criticalH_)*pos(Hint-criticalH_) + criticalH_);
-    operator==((Hint-(criticalH_-Sp))*pos(Hint-(criticalH_-Sp)) + (criticalH_-Sp));
+    operator==((HInt - (criticalH_ - Sp))*pos(HInt-(criticalH_-Sp)) + (criticalH_-Sp));
 
     fixedValueFvPatchScalarField::updateCoeffs();
 }
@@ -121,7 +111,7 @@ void criticalFlowDepthInletFvPatchScalarField::write(Ostream& os) const
     os.writeKeyword("criticalH") << criticalH_
         << token::END_STATEMENT << nl;
 
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

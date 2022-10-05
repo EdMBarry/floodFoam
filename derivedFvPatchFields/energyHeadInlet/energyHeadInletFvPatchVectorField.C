@@ -90,19 +90,6 @@ Foam::
 energyHeadInletFvPatchVectorField::
 energyHeadInletFvPatchVectorField
 (
-    const energyHeadInletFvPatchVectorField& ptf
-)
-:
-    fixedValueFvPatchField<vector>(ptf),
-    energyHead_(ptf.energyHead_),
-    HName_(ptf.HName_)
-{}
-
-
-Foam::
-energyHeadInletFvPatchVectorField::
-energyHeadInletFvPatchVectorField
-(
     const energyHeadInletFvPatchVectorField& ptf,
     const DimensionedField<vector, volMesh>& iF
 )
@@ -153,7 +140,7 @@ void Foam::energyHeadInletFvPatchVectorField::write(Ostream& os) const
         os.writeKeyword("H") << HName_ << token::END_STATEMENT << nl;
     }
 
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

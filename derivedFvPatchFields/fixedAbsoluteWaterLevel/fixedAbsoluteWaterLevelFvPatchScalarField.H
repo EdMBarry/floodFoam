@@ -100,21 +100,6 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
-        fixedAbsoluteWaterLevelFvPatchScalarField
-        (
-            const fixedAbsoluteWaterLevelFvPatchScalarField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchScalarField> clone() const
-        {
-            return tmp<fvPatchScalarField>
-            (
-                new fixedAbsoluteWaterLevelFvPatchScalarField(*this)
-            );
-        }
-
         //- Construct as copy setting internal field reference
         fixedAbsoluteWaterLevelFvPatchScalarField
         (

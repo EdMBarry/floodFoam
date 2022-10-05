@@ -27,9 +27,9 @@ Class
 
 Description
 
-    Sets HU such that following holds:
+    Sets hU such that following holds:
 
-          HU = flowRate / widthInflowPatch
+          hU = flowRate / widthInflowPatch
 
     Example of the boundary condition specification:
     @verbatim
@@ -73,7 +73,7 @@ class flowRateInletFvPatchVectorField
         scalar flowRate_;
 
     //
-    word HName_;
+        word HName_;
 
 
 public:
@@ -105,25 +105,11 @@ public:
         flowRateInletFvPatchVectorField
         (
             const flowRateInletFvPatchVectorField&,
-	    const fvPatch&,
+  	        const fvPatch&,
             const DimensionedField<vector, volMesh>&,
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
-        flowRateInletFvPatchVectorField
-        (
-            const flowRateInletFvPatchVectorField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchVectorField> clone() const
-        {
-            return tmp<fvPatchVectorField>
-            (
-                new flowRateInletFvPatchVectorField(*this)
-            );
-        }
 
         //- Construct as copy setting internal field reference
         flowRateInletFvPatchVectorField

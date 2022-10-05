@@ -104,21 +104,6 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
-        dischargeFlowDepthOutletFvPatchVectorField
-        (
-            const dischargeFlowDepthOutletFvPatchVectorField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchVectorField> clone() const
-        {
-            return tmp<fvPatchVectorField>
-            (
-                new dischargeFlowDepthOutletFvPatchVectorField(*this)
-            );
-        }
-
         //- Construct as copy setting internal field reference
         dischargeFlowDepthOutletFvPatchVectorField
         (

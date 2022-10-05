@@ -112,21 +112,6 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
-        energyHeadInletFvPatchVectorField
-        (
-            const energyHeadInletFvPatchVectorField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchVectorField> clone() const
-        {
-            return tmp<fvPatchVectorField>
-            (
-                new energyHeadInletFvPatchVectorField(*this)
-            );
-        }
-
         //- Construct as copy setting internal field reference
         energyHeadInletFvPatchVectorField
         (

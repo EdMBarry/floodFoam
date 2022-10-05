@@ -76,16 +76,6 @@ fixedAbsoluteWaterLevelFvPatchScalarField::fixedAbsoluteWaterLevelFvPatchScalarF
 
 fixedAbsoluteWaterLevelFvPatchScalarField::fixedAbsoluteWaterLevelFvPatchScalarField
 (
-    const fixedAbsoluteWaterLevelFvPatchScalarField& wbppsf
-)
-:
-    fixedValueFvPatchField<scalar>(wbppsf),
-    fixedH_(wbppsf.fixedH_)
-{}
-
-
-fixedAbsoluteWaterLevelFvPatchScalarField::fixedAbsoluteWaterLevelFvPatchScalarField
-(
     const fixedAbsoluteWaterLevelFvPatchScalarField& wbppsf,
     const DimensionedField<scalar, volMesh>& iF
 )
@@ -120,7 +110,7 @@ void fixedAbsoluteWaterLevelFvPatchScalarField::write(Ostream& os) const
     os.writeKeyword("fixedH") << fixedH_
         << token::END_STATEMENT << nl;
 
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
