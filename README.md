@@ -1,11 +1,14 @@
-# shallowFoam
+# floodFoam
 OpenFOAM-based solver for 2D shallow water equations. 
 
-This master branch has been tested under foam-extend-3.1, and should work for foam-extend-3.x in general. For OpenFOAM-4.1 see the branch OpenFOAM-4.1, which should work for OpenFOAM-4.x in general.
+It is important to note that this solver has been renamed to floodFoam (from shallowFoam).
+This branch has been updated to work on the latest version of OpenFOAM from the OpenFOAM Foundation (OpenFOAM-10).
+This code should work for the equivalent ESI group OpenFOAM version but requires testing.
 
 Authors:
   - KM-Turbulenz GmbH (www.km-turbulenz.de), 2009
   - Florian Mintgen, 2012
+  - Dr. Ed Barry, FloodMapp, 2022
 
 Description:
   - Solves the depth-averaged 2D shallow water equations:
@@ -21,7 +24,7 @@ Description:
       - z_b: bottom elevation
       - tau_b: bottom stresses
 
-  - Bottom stresses are modeled via Strickler-equation
+  - Bottom stresses are modeled via Strickler-equation (and Manning's equation to be included).
   - Turbulence is captured by an eddy viscosity model
   - Works in parallel
   - Captures wet-dry fronts
@@ -31,3 +34,4 @@ Description:
     - Explicit formulation of flow depth and bottom elevation
     - Bottom stresses / surface roughness taken into account
     - Custom  boundary conditions well suited for river hydraulics
+    - Avoids divide-by-zero errors for dry areas which shallowWaterFoam cannot handle
