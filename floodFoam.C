@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 1991-2008 OpenCFD Ltd.
+    \\  /    A nd           | Copyright (C) 1991-2022 OpenCFD Ltd.
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
     Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 Application
-    shallowFoam
+    floodFoam
 
 Description
     Transient solver for depth averaged shallow water equations.
@@ -31,83 +31,81 @@ Description
 Authors
     KM-Turbulenz GmbH, 2009 (www.km-turbulenz.de)
     Florian Mintgen, 2012
+    Ed Barry, FloodMapp, 2022
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "pimpleControl.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
 
-#   include "setRootCase.H"
-
-#   include "createTime.H"
-#   include "createMesh.H"
-#   include "createFields.H"
-
-#   include "readTimeControls.H"
-#   include "CourantNo.H"
-#   include "setInitialDeltaT.H"
+  #include "postProcess.H"
+  #include "setRootCaseLists.H"
+  #include "createTime.H"
+  #include "createMesh.H"
+  #include "createControl.H"
+  #include "createFields.H"
+  
+  #include "createTimeControls.H"
+  #include "CourantNo.H"
+  #include "setInitialDeltaT.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting time loop\n" << endl;
 
-    while (runTime.run())
+    while (pimple.loop(runTime))
     {
-        #include "setDeltaT.H"
-
-        runTime++;
-
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-///////////////////////////////////////////////////////////////////////////////
-///     Transport equations for H und HU
-	fvScalarMatrix HEqn
+        #include "CourantNo.H"
+
+    	fvScalarMatrix HEqn
         (
-	    fvm::ddt(H)
-	    + fvm::div(phi,H)
+	        fvm::ddt(H)
+	        + fvm::div(phi, H)
         );
 
         HEqn.solve();
 
-        // Hclip = max (H, Hdry)
-        Hclip = (H-Hdry)*pos(H-Hdry) + Hdry;
+        Hclip = (H - Hdry) * pos(H - Hdry) + Hdry;
 
-	// Bottom friction based on Strickler-equation
-        alpha = (g*dim_s*dim_s/dim_m)*mag(U)/pow(kst,2.0)/pow(Hclip/dim_m,1.0/3.0)/Hclip;
+    	// Bottom friction based on Strickler-equation
+        alpha = (
+            g * dim_s * dim_s / dim_m
+        ) * mag(U) / pow(kst,2.0)
+            / pow(Hclip / dim_m, 1.0 / 3.0)/Hclip;
 
-        // nu_t = C_nu * u_tau * H
-        nut = Cnu*sqrt(alpha*mag(HU))*H;
-        nut = nut*pos(nutmax-nut) + nutmax*pos(nut-nutmax);
+        nut = Cnu * sqrt(alpha * mag(HU)) * H;
+        nut = nut * pos(nutmax - nut) + nutmax * pos(nut - nutmax);
         nut.correctBoundaryConditions();
 
-	// Zero-Gradient for faces at wet-dry interface
-	#include "zeroGradientWetDry.H"
+    	// Zero-Gradient for faces at wet-dry interface
+	    #include "zeroGradientWetDry.H"
 
          fvVectorMatrix HUEqn
          (
-             fvm::ddt(HU)          // d(HU_i)/dt                    Local derivative
-	     + fvm::div(phi, HU)   // + d/dx_j ( U_j * HU_i )       Convection
-	     + H*gradgSpHf          // + H * d/dx_i ( gSpH )        Downhill-slope force and acceleration due to change in flowdepth
-	     + fvm::Sp(alpha,HU)   // + alpha * HU                  Bottom friction
-	     - fvm::laplacian(nut,HU) // - d^2/dx_j^2 ( nut * HU )  Turbulent stresses
+            fvm::ddt(HU)          // d(HU_i)/dt                    Local derivative
+	        + fvm::div(phi, HU)   // + d/dx_j ( U_j * HU_i )       Convection
+	        + H*gradgSpHf          // + H * d/dx_i ( gSpH )        Downhill-slope force and acceleration due to change in flowdepth
+	        + fvm::Sp(alpha, HU)   // + alpha * HU                  Bottom friction
+	        - fvm::laplacian(nut, HU) // - d^2/dx_j^2 ( nut * HU )  Turbulent stresses
          );  
 
-	HUEqn.solve();
+	    HUEqn.solve();
 
-///////////////////////////////////////////////////////////////////////////////
-///     Calculation of U and phi
-
-        // if Hclip < Hdry2, then U = 0
-        HU = HU*pos(Hclip - Hdry2); 
-        U = HU/Hclip;
+        ///  Calculation of U and phi
+        HU = HU * pos(Hclip - Hdry2); 
+        U = HU / Hclip;
        
         phi = (fvc::interpolate(U) & mesh.Sf());
 
-///////////////////////////////////////////////////////////////////////////////
 
         runTime.write();
 
@@ -118,7 +116,7 @@ int main(int argc, char *argv[])
 
     Info<< "End\n" << endl;
 
-    return(0);
+    return 0;
 }
 
 
