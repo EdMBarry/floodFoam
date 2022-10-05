@@ -1,8 +1,8 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 1991-2008 OpenCFD Ltd.
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,16 +76,6 @@ fixedAbsoluteWaterLevelFvPatchScalarField::fixedAbsoluteWaterLevelFvPatchScalarF
 
 fixedAbsoluteWaterLevelFvPatchScalarField::fixedAbsoluteWaterLevelFvPatchScalarField
 (
-    const fixedAbsoluteWaterLevelFvPatchScalarField& wbppsf
-)
-:
-    fixedValueFvPatchField<scalar>(wbppsf),
-    fixedH_(wbppsf.fixedH_)
-{}
-
-
-fixedAbsoluteWaterLevelFvPatchScalarField::fixedAbsoluteWaterLevelFvPatchScalarField
-(
     const fixedAbsoluteWaterLevelFvPatchScalarField& wbppsf,
     const DimensionedField<scalar, volMesh>& iF
 )
@@ -120,7 +110,7 @@ void fixedAbsoluteWaterLevelFvPatchScalarField::write(Ostream& os) const
     os.writeKeyword("fixedH") << fixedH_
         << token::END_STATEMENT << nl;
 
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

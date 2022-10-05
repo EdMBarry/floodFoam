@@ -1,8 +1,8 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 1991-2008 OpenCFD Ltd.
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ Class
 
 Description
     
-    In order to avoid super critical conditions at the inlet, this BC limits the absolute flow depth H + S to a user defined critical absolute flow depth criticalH.
+    In order to avoid super critical conditions at the inlet, this BC limits the absolute flow depth h + h0 to a user defined critical absolute flow depth criticalH.
 
     Example of the boundary condition specification:
     @verbatim
@@ -99,21 +99,6 @@ public:
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
-
-        //- Construct as copy
-        criticalFlowDepthInletFvPatchScalarField
-        (
-            const criticalFlowDepthInletFvPatchScalarField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchScalarField> clone() const
-        {
-            return tmp<fvPatchScalarField>
-            (
-                new criticalFlowDepthInletFvPatchScalarField(*this)
-            );
-        }
 
         //- Construct as copy setting internal field reference
         criticalFlowDepthInletFvPatchScalarField

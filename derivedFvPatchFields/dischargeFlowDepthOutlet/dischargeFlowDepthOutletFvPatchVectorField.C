@@ -1,8 +1,8 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2006-2008 OpenCFD Ltd.
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,9 +36,7 @@ Author
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::
-dischargeFlowDepthOutletFvPatchVectorField::
-dischargeFlowDepthOutletFvPatchVectorField
+Foam::dischargeFlowDepthOutletFvPatchVectorField::dischargeFlowDepthOutletFvPatchVectorField
 (
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF
@@ -88,18 +86,6 @@ Foam::
 dischargeFlowDepthOutletFvPatchVectorField::
 dischargeFlowDepthOutletFvPatchVectorField
 (
-    const dischargeFlowDepthOutletFvPatchVectorField& ptf
-)
-:
-    fixedValueFvPatchField<vector>(ptf),
-    HName_(ptf.HName_)
-{}
-
-
-Foam::
-dischargeFlowDepthOutletFvPatchVectorField::
-dischargeFlowDepthOutletFvPatchVectorField
-(
     const dischargeFlowDepthOutletFvPatchVectorField& ptf,
     const DimensionedField<vector, volMesh>& iF
 )
@@ -118,13 +104,13 @@ void Foam::dischargeFlowDepthOutletFvPatchVectorField::updateCoeffs()
         return;
     }
 
+    const fvPatchScalarField& Sp = patch().lookupPatchField<volScalarField, scalar>("S");
     const vectorField n = patch().nf();
-    const fvPatchScalarField Sp = patch().lookupPatchField<volScalarField, scalar>("S");
     const scalarField gradSp = Sp.snGrad();
     const scalarField kstp = patch().lookupPatchField<volScalarField, scalar>("kst");
     const scalarField Hp = patch().lookupPatchField<volScalarField, scalar>(HName_);
 
-    const scalarField phip = patch().lookupPatchField<surfaceScalarField, scalar>("phi");
+    const scalarField& phip = patch().lookupPatchField<surfaceScalarField, scalar>("phi");
     const scalar surfaceSumPhip = gSum(phip*Hp);
 
     operator==(n*sqrt(mag(gradSp))*kstp*pow(Hp,(5.0/3.0)));
@@ -144,7 +130,7 @@ void Foam::dischargeFlowDepthOutletFvPatchVectorField::write(Ostream& os) const
         os.writeKeyword("H") << HName_ << token::END_STATEMENT << nl;
     }
 
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -1,8 +1,8 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2006-2008 OpenCFD Ltd.
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-wetDry = pos(H-Hdry);
+wetDry = pos(H - Hdry);
 
-volScalarField gSpH = g*(S+H);
+volScalarField gSpH = g * (S + H);
 surfaceScalarField gSpHf = fvc::interpolate(gSpH);
 volVectorField gradgSpHf = fvc::grad(gSpHf);
 
@@ -37,7 +37,7 @@ const scalarField& V = mesh.V();
 
 const scalarField& gSpHi = gSpH.internalField();
 const scalarField& gSpHfi = gSpHf.internalField();
-vectorField& gradgSpHfi = gradgSpHf.internalField();
+vectorField& gradgSpHfi = gradgSpHf.primitiveFieldRef();
 
 forAll(owner, facei)
 {
@@ -46,9 +46,7 @@ forAll(owner, facei)
 
   if (wetDry[P] != wetDry[N])
 	  {
-	    gradgSpHfi[P] += Sf[facei]*(gSpHi[P] - gSpHfi[facei]) / V[P];
-	    gradgSpHfi[N] -= Sf[facei]*(gSpHi[N] - gSpHfi[facei]) / V[N];
+	    gradgSpHfi[P] += Sf[facei] * (gSpHi[P] - gSpHfi[facei]) / V[P];
+	    gradgSpHfi[N] -= Sf[facei] * (gSpHi[N] - gSpHfi[facei]) / V[N];
 	  }
 }
-
-

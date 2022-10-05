@@ -1,8 +1,8 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2006-2008 OpenCFD Ltd.
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,21 +111,6 @@ public:
             const DimensionedField<vector, volMesh>&,
             const fvPatchFieldMapper&
         );
-
-        //- Construct as copy
-        energyHeadInletFvPatchVectorField
-        (
-            const energyHeadInletFvPatchVectorField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchVectorField> clone() const
-        {
-            return tmp<fvPatchVectorField>
-            (
-                new energyHeadInletFvPatchVectorField(*this)
-            );
-        }
 
         //- Construct as copy setting internal field reference
         energyHeadInletFvPatchVectorField
