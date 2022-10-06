@@ -5,25 +5,29 @@ It is important to note that this solver has been renamed to floodFoam (from sha
 This branch has been updated to work on the latest version of OpenFOAM from the OpenFOAM Foundation (OpenFOAM-10).
 This code should work for the equivalent ESI group OpenFOAM version but requires testing.
 
-Authors:
+## Authors:
   - KM-Turbulenz GmbH (www.km-turbulenz.de), 2009
   - Florian Mintgen, 2012
   - Dr. Ed Barry, FloodMapp, 2022
 
-Description:
+## Description:
   - Solves the depth-averaged 2D shallow water equations:
 
-    dH/dt + d(HU_i)/d(x_i) = 0
-    
-    d(HU_i)/dt + d/dx_j (U_j * HU_i) = - g/2 * dH^2/dx_i - g * H * dz_b/dx_i - tau_bx_i / rho + d^2/dx_j^2 ( nu_t * HU )
-    
-    with:
-      - H: flow depth
-      - HU: specific discharge
-      - U: depth averaged velocity
-      - z_b: bottom elevation
-      - tau_b: bottom stresses
+  $$\frac{\partial H}{\partial t} + \frac{\partial (H\mathbf{U}_i)}{\partial x_i} = 0   $$
 
+
+  $$ 
+        \frac{\partial (HU_i)}{\partial t}  + \frac{\partial (U_j HU_i)}{\partial x_j} = -\frac{g}{2} \cdot \frac{\partial H^2}{\partial x_i}  - gH \frac{\partial z_b}{\partial x_i}  - \frac{\tau_b}{\rho} + \frac{\partial ^2(\nu_t HU)}{\partial j^2} $$
+    
+*with*:
+  - $H$: flow depth
+  - $H\mathbf{U}$: specific discharge
+  - $\mathbf{U}$: depth averaged velocity
+  - $z_b$: bottom elevation
+  - $\tau_b$: bottom stresses
+
+
+**Notes**:
   - Bottom stresses are modeled via Strickler-equation (and Manning's equation to be included).
   - Turbulence is captured by an eddy viscosity model
   - Works in parallel
