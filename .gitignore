@@ -1,2 +1,6 @@
 # compilation files
 Make/linux*
+
+# vscode 
+.vscode/
+.devcontainer/
